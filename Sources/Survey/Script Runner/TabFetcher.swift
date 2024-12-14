@@ -9,15 +9,17 @@ import Foundation
 
 extension AppleScript {
 	public enum TabFetcher: String, CaseIterable, Identifiable, Hashable, RunnableScript {
-		case safariFrontmostTab = "Frontmost Tab for Safari", safariAllFrontWindowTabs = "All Front Window Tabs for Safari", safariAllVisibleTabs = "All Visible Tabs for Safari", safariAllTabs = "All Tabs for Safari"
+		case safariFrontmostTab = "Frontmost Tab for Safari", safariFrontmostTabText = "Frontmost tab text for Safari", safariFrontmostTabSource = "Frontmost tab source for Safari", safariAllFrontWindowTabs = "All Front Window Tabs for Safari", safariAllVisibleTabs = "All Visible Tabs for Safari", safariAllTabs = "All Tabs for Safari"
 		
-		case chromeFrontmostTab = "Frontmost Tab for Chrome", chromeAllFrontWindowTabs = "All Front Window Tabs for Chrome", chromeAllVisibleTabs = "All Visible Tabs for Chrome", chromeAllTabs = "All Tabs for Chrome"
+		case chromeFrontmostTab = "Frontmost Tab for Chrome", chromeFrontmostTabSource = "Frontmost tab source for Chrome", chromeFrontmostTabText = "Frontmost tab text for Chrome", chromeAllFrontWindowTabs = "All Front Window Tabs for Chrome", chromeAllVisibleTabs = "All Visible Tabs for Chrome", chromeAllTabs = "All Tabs for Chrome"
 
 		case operaFrontmostTab = "Frontmost Tab for Opera", operaAllFrontWindowTabs = "All Front Window Tabs for Opera", operaAllVisibleTabs = "All Visible Tabs for Opera", operaAllTabs = "All Tabs for Opera"
 		
 		public var script: String {
 			switch self {
 			case .safariFrontmostTab: return "tell application \"Safari\" to get {name, URL} of current tab of front window"
+			case .safariFrontmostTabText: return "tell application \"Safari\" to get {text} of current tab of front window"
+			case .safariFrontmostTabSource: return "tell application \"Safari\" to get {source} of current tab of front window"
 			case .safariAllFrontWindowTabs: return "tell application \"Safari\" to get {name, URL} of every tab of front window"
 			case .safariAllVisibleTabs: return "tell application \"Safari\" to get {name, URL} of current tab of every window"
 			case .safariAllTabs: return "tell application \"Safari\" to get {name, URL} of every tab of every window"
@@ -25,6 +27,8 @@ extension AppleScript {
 			case .chromeFrontmostTab: return "tell application \"Google Chrome\" to get (title, URL) of active tab of front window"
 			case .chromeAllFrontWindowTabs: return "tell application \"Google Chrome\" to get (title, URL) of every tab of front window"
 			case .chromeAllVisibleTabs: return "tell application \"Google Chrome\" to get (title, URL) of active tab of every window"
+			case .chromeFrontmostTabSource: return "tell application \"Google Chrome\" to execute front window's active tab javascript \"document.body.innerHTML\""
+			case .chromeFrontmostTabText: return "tell application \"Google Chrome\" to execute front window's active tab javascript \"document.body.innerText\""
 			case .chromeAllTabs: return "tell application \"Google Chrome\" to get (title, URL) of every tab of every window"
 
 			case .operaFrontmostTab: return "tell application \"Opera\" to get (title, URL) of active tab of front window"
@@ -42,8 +46,8 @@ extension AppleScript {
 		
 		public var browser: BrowserKind {
 			switch self {
-			case .safariAllTabs, .safariFrontmostTab, .safariAllVisibleTabs, .safariAllFrontWindowTabs: .safari
-			case .chromeAllTabs, .chromeFrontmostTab, .chromeAllVisibleTabs, .chromeAllFrontWindowTabs: .chrome
+			case .safariAllTabs, .safariFrontmostTab, .safariFrontmostTabText, .safariFrontmostTabSource, .safariAllVisibleTabs, .safariAllFrontWindowTabs: .safari
+			case .chromeAllTabs, .chromeFrontmostTab, .chromeFrontmostTabSource, .chromeFrontmostTabText, .chromeAllVisibleTabs, .chromeAllFrontWindowTabs: .chrome
 			case .operaFrontmostTab, .operaAllVisibleTabs, .operaAllFrontWindowTabs, .operaAllTabs: .opera
 			}
 		}
@@ -52,11 +56,15 @@ extension AppleScript {
 			let raw: [BrowserTabInformation] = switch self {
 			case .safariAllTabs: try [BrowserTabInformation](namesAndURLsByWindow: string, browser: .safari)
 			case .safariFrontmostTab: try [BrowserTabInformation](tabNameAndURL: string, browser: .safari)
+			case .safariFrontmostTabText: fatalError("Not implemented")
+			case .safariFrontmostTabSource: fatalError("Not implemented")
 			case .safariAllVisibleTabs: try [BrowserTabInformation](namesAndURLs: string, browser: .safari)
 			case .safariAllFrontWindowTabs: try [BrowserTabInformation](namesAndURLs: string, browser: .safari)
 
 			case .chromeAllTabs: try [BrowserTabInformation](namesAndURLsByWindow: string, browser: .chrome)
 			case .chromeFrontmostTab: try [BrowserTabInformation](tabNameAndURL: string, browser: .chrome)
+			case .chromeFrontmostTabText: fatalError()
+			case .chromeFrontmostTabSource: fatalError()
 			case .chromeAllVisibleTabs: try [BrowserTabInformation](namesAndURLs: string, browser: .chrome)
 			case .chromeAllFrontWindowTabs: try [BrowserTabInformation](namesAndURLs: string, browser: .chrome)
 

@@ -17,7 +17,9 @@ public enum BrowserEvent: Codable, CustomStringConvertible, Equatable, Hashable 
 	var id: String { description }
 	
 	public func matches(filter: String) -> Bool {
-		filter.isEmpty || description.localizedCaseInsensitiveContains(filter)
+		if filter.isEmpty { return true }
+		if let url, url.absoluteString.contains(filter) { return true }
+		return description.localizedCaseInsensitiveContains(filter)
 	}
 	
 	public var description: String {
