@@ -17,10 +17,10 @@ extension String {
 		
 		let missingValue = "missing value"
 		if bracketed.contains(missingValue) {
-			print("Found missing value!")
+			//print("Found missing value!")
 			guard let data = bracketed.data(using: .utf8) else { return "[]" }
 			if (try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)) == nil {
-				bracketed = bracketed.replacingOccurrences(of: missingValue, with: "about.blank")
+				bracketed = bracketed.replacingOccurrences(of: missingValue, with: "\"about.blank\"")
 			}
 		}
 		return bracketed
