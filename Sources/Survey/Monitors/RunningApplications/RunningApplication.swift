@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RunningApplication: Codable, Hashable, Identifiable {
+public struct RunningApplication: Codable, Hashable, Identifiable, Sendable {
 	public var id: String { identifier }
 	public let identifier: String
 	public let name: String

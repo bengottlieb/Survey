@@ -10,7 +10,7 @@ import Combine
 
 #if os(macOS)
 
-public protocol RecordedEventDelegate: AnyActor {
+public protocol RecordedEventDelegate: Actor {
 	func receivedEvents(_ events: [RecordedEvent])
 }
 

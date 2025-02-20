@@ -32,7 +32,7 @@ extension Process {
 	
 	var launchURL: URL { URL(fileURLWithPath: self.launchPath ?? "") }
 	
-	func run() async throws -> Data {
+	func run(andWait: Bool = true) async throws -> Data {
 		let data: Data = try await withCheckedThrowingContinuation { continuation in
 			let outputPipe = Pipe()
 			let errorPipe = Pipe()
@@ -42,7 +42,7 @@ extension Process {
 			
 			do {
 				try self.run()
-				self.waitUntilExit()
+				if andWait { self.waitUntilExit() }
 				
 				let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
 				let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()

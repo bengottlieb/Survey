@@ -13,7 +13,7 @@ extension Set where Element == RunningApplication {
 	}
 }
 
-public struct RunningApplicationCollection: Codable, Equatable, Hashable, CustomStringConvertible {
+public struct RunningApplicationCollection: Codable, Equatable, Hashable, CustomStringConvertible, Sendable {
 	let apps: Set<RunningApplication>
 	public var description: String {
 		apps.map { $0.name }.joined(separator: ", ")

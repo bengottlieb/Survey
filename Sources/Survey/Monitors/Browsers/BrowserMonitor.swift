@@ -16,7 +16,8 @@ class BrowserMonitor: NSObject {
 	var lastState: BrowserState?
 	var history: [RecordedEvent] = []
 	
-	@MainActor var checkInterval: TimeInterval = 1 { didSet { Task { setupTimer() }}}
+	private var isUpdating = false
+	@MainActor var checkInterval: TimeInterval = 5 { didSet { Task { setupTimer() }}}
 	private weak var checkTimer: Timer?
 	private var cancellables = Set<AnyCancellable>()
 	weak var delegate: RecordedEventDelegate!
@@ -29,7 +30,7 @@ class BrowserMonitor: NSObject {
 		if let initialState {
 			let initialEvent = RecordedEvent.browserEvent(.initialState(initialState), Date())
 			history = [initialEvent]
-			delegate.receivedEvents([initialEvent])
+			await delegate.receivedEvents([initialEvent])
 		}
 	}
 	
@@ -52,11 +53,15 @@ class BrowserMonitor: NSObject {
 			async let operaVisible = ScriptRunner.instance.fetchTabs(for: .operaAllVisibleTabs)
 
 			let (all, visible) = (await (safariAll + chromeAll + operaAll), await safariVisible + chromeVisible + operaVisible)
-			return BrowserState(all: all, visible: visible)
+			let result = BrowserState(all: all, visible: visible)
+			return result
 		}
 	}
 	
 	@objc func update() async {
+		if isUpdating { return }
+		isUpdating = true
+		defer { isUpdating = false }
 		do {
 			let newState = try await currentState
 			guard let lastState else {
@@ -70,7 +75,7 @@ class BrowserMonitor: NSObject {
 				self.lastState = newState
 				let events = diff.events(basedOn: history)
 				history += events
-				delegate.receivedEvents(events)
+				await delegate.receivedEvents(events)
 			}
 		} catch {
 			print("Tab fetching failed: \(error)")

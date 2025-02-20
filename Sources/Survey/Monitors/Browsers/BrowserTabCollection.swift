@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct BrowserTabCollection: Codable, Equatable, Hashable {
+public struct BrowserTabCollection: Codable, Equatable, Hashable, Sendable {
 	public let tabs: Set<BrowserTabInformation>
 	public var count: Int { tabs.count }
 	
-	public struct Diffs: Codable, CustomStringConvertible {
+	public struct Diffs: Codable, CustomStringConvertible, Sendable {
 		public let opened: Set<BrowserTabInformation>
 		public let closed: Set<BrowserTabInformation>
 

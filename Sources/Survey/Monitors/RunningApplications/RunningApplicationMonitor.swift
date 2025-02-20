@@ -24,7 +24,7 @@ import Cocoa
 		
 		self.delegate = delegate
 		let initialEvent = RecordedEvent.applicationEvent(.initialState(.current), Date())
-		delegate.receivedEvents([initialEvent])
+		Task { await delegate.receivedEvents([initialEvent]) }
 		
 		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(didActivateApplication), name: NSWorkspace.didActivateApplicationNotification, object: nil)
 		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(didLaunchApplication), name: NSWorkspace.didLaunchApplicationNotification, object: nil)
@@ -40,7 +40,7 @@ import Cocoa
 		let diff = newState.diffs(since: lastState)
 		if !diff.isEmpty {
 			self.lastState = newState
-			delegate.receivedEvents(diff.events)
+			Task { await delegate.receivedEvents(diff.events) }
 		}
 
 	}

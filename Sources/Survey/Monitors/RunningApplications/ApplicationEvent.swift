@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ApplicationEvent: Codable, Equatable, Hashable {
+public enum ApplicationEvent: Codable, Equatable, Hashable, Sendable {
 	case initialState(RunningApplicationCollection)
 	case openedApp(RunningApplication)
 	case closedApp(RunningApplication)

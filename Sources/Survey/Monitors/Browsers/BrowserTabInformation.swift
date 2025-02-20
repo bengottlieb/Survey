@@ -8,7 +8,7 @@
 import Foundation
 import Suite
 
-public struct BrowserTabInformation: Codable, Hashable, Equatable {
+public struct BrowserTabInformation: Codable, Hashable, Equatable, Sendable {
 	public let url: URL
 	public let title: String?
 	public let browser: BrowserKind

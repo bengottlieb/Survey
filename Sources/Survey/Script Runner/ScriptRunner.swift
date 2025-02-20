@@ -34,10 +34,10 @@ public actor ScriptRunner {
 	public func setup() {
 		
 	}
-	public var osascriptPath: String?
+	public var osascriptPath: String? = Gestalt.isAttachedToDebugger ? "/usr/bin/osascript" : nil
 	
 	public func runForData(script: String) async throws -> Data {
-		try await Process(path: loadOSAScript(), arguments: ["-e", "\(script)", "-ss"]).run()
+		try await Process(path: loadOSAScript(), arguments: ["-e", "\(script)", "-ss"]).run(andWait: false)
 	}
 	
 	public func run(script: String) async throws -> String {
