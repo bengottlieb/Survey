@@ -78,7 +78,7 @@ class BrowserMonitor: NSObject {
 				await delegate.receivedEvents(events)
 			}
 		} catch {
-			print("Tab fetching failed: \(error)")
+			SurveyLogger.error("Tab fetching failed: \(error, privacy: .public)")
 		}
 	}
 	

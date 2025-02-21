@@ -32,7 +32,7 @@ extension String {
 		do {
 			return try JSONDecoder().decode([[String]].self, from: data)
 		} catch {
-			print("Failed to decode a 2D string array: \(error)")
+			SurveyLogger.error("Failed to decode a 2D string array: \(error, privacy: .public)")
 			return nil
 		}
 	}
@@ -43,7 +43,7 @@ extension String {
 		do {
 			return try JSONDecoder().decode([String].self, from: data)
 		} catch {
-			print("Failed to decode a 1D string array: \(error)")
+			SurveyLogger.error("Failed to decode a 1D string array: \(error, privacy: .public)")
 			return nil
 		}
 	}
@@ -54,7 +54,7 @@ extension String {
 		do {
 			return try JSONDecoder().decode([[[String]]].self, from: data)
 		} catch {
-			print("Failed to decode a 3D string array: \(error)")
+			SurveyLogger.error("Failed to decode a 3D string array: \(error, privacy: .public)")
 			return nil
 		}
 	}
