@@ -11,6 +11,21 @@ public enum RecordedEvent: Codable, CustomStringConvertible, Equatable, Hashable
 	case browserEvent(BrowserEvent, Date)
 	case applicationEvent(ApplicationEvent, Date)
 	
+	public var isVisible: Bool {
+		switch self {
+		case .browserEvent(let event, _):
+			event.url != .blank
+		case .applicationEvent:  true
+		}
+	}
+	
+	public var shouldShowWhenCollapsed: Bool {
+		switch self {
+		case .browserEvent: true
+		case .applicationEvent: false
+		}
+	}
+	
 	public var id: String {
 		switch self {
 		case .browserEvent(let event, let date): event.id + "\(date.timeIntervalSinceReferenceDate)"
